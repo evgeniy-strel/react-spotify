@@ -66,6 +66,7 @@ const Artists = ({
         const caption = artist.name + (isLastItem || withImage ? "" : ", ");
         return (
           <div
+            key={artist.id}
             className="flex gap-2 items-center"
             onClick={() => openPageArist(artist.id)}
           >

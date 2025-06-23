@@ -5,5 +5,4 @@ export { FollowedArtists } from "./_components/FollowedArtists/FollowedArtists";
 export { default as BackButton } from "./_components/BackButton/BackButton";
 export { default as Artists } from "./_components/Artists/Artists";
 export { default as HorizontalScrollContainer } from "./_components/HorizontalScrollContainer/HorizontalScrollContainer";
-export { default as ScrollToTop } from "./_components/ScrollToTop/ScrollToTop";
 export { default as FavoriteButton } from "./_components/FavoriteButton/FavoriteButton";
