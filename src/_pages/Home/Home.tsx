@@ -1,32 +1,15 @@
-import { AuthButton, Favorite, FollowedArtists, RecentlyPlayed } from "../../components";
-import { useContext, useEffect, useState } from "react";
-import { AuthProvider } from "../../contexts/AuthProvider";
-import { Player } from "../../api";
+import { Favorite, FollowedArtists, RecentlyPlayed } from "../../components";
+import { NewReleases } from "./NewReleases/NewReleases";
 
 const HomePage = () => {
-    const { accessToken } = useContext(AuthProvider);
-    const [recentlyPlayedData, setRecentlyPlayedData] = useState({});
-    const [isError, setIsError] = useState(false);
-
-    useEffect(() => {
-        if (accessToken) {
-            Player.getRecentlyPlayed(accessToken)
-                .then(setRecentlyPlayedData)
-                .catch((error) => setIsError(true));
-        }
-    }, [accessToken]);
-
-    if (isError || !recentlyPlayedData) {
-        return <AuthButton />;
-    }
-
-    return (
-        <div className="ml-4 mr-4 flex flex-col gap-6">
-            <RecentlyPlayed data={recentlyPlayedData} />
-            <FollowedArtists />
-            <Favorite />
-        </div>
-    );
+  return (
+    <div className="ml-6 mr-6 flex flex-col gap-6">
+      <RecentlyPlayed />
+      <FollowedArtists />
+      <Favorite />
+      <NewReleases />
+    </div>
+  );
 };
 
 export default HomePage;

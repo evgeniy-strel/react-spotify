@@ -1,0 +1,39 @@
+.grid {
+    grid-template-columns: 1fr 1fr;
+}
+
+.header {
+
+}
+
+.header__title {
+    font-size: 3.5rem!important;
+}
+
+.imgArtist {
+
+}
+
+@media screen and (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+    .header__info {
+        align-items: center;
+    }
+    .header__title {
+        font-size: 3rem!important;
+        line-height: 3rem!important;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .header__title {
+        font-size: 2.5rem!important;
+        line-height: 2.5rem!important;
+    }
+}

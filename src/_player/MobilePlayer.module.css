@@ -1,0 +1,42 @@
+.bar {
+    display: none;
+}
+
+.fullScreen {
+    /* background: rgb(137, 137, 137); */
+    width: 100dvw;
+    height: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: .2s ease-in;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.fullScreen_visible {
+    visibility: visible;
+    opacity: 1;
+    height: 100dvh;
+}
+
+.bgImage::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    backdrop-filter: blur(40px);
+    /* background-color: red; */
+}
+
+@media screen and (max-width: 768px) {
+    .bar {
+        display: flex;
+    }
+}

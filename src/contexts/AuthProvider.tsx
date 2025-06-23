@@ -1,7 +1,5 @@
 import { createContext } from "react";
 
-interface IAuthProvider {
-    accessToken: string;
-}
+interface IAuthProvider {}
 
 export const AuthProvider = createContext<IAuthProvider>({ accessToken: "" });
