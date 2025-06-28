@@ -2,15 +2,18 @@ import { useContext, useState } from "react";
 
 import classes from "./MobilePlayer.module.css";
 import { Artists } from "../components";
-
-import { Typography } from "antd";
-import { DownOutlined } from "@ant-design/icons";
 import PauseButton from "./components/PauseButton";
 import PreviousTrackButton from "./components/PreviousTrackButton";
 import NextTrackButton from "./components/NextTrackButton";
 import { PlayerContext } from "./context";
 import Timeline from "./components/Timeline";
 import { formatTimeTrack } from "../utils";
+import FavoriteButton from "./components/FavoriteButton";
+import RepeatModeButton from "./components/RepeatModeButton";
+import ShuffleButton from "./components/ShuffleButton";
+
+import { Typography } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
 const Background = () => {
   const { data } = useContext(PlayerContext);
@@ -60,18 +63,21 @@ const MobilePlayer = ({ data }: any) => {
             src={data?.item?.album.images?.at(0).url}
           />
         </div>
-        <div className="mt-3">
-          <Typography.Title level={4} style={{ marginBottom: 0 }}>
-            {data?.item?.name}
-          </Typography.Title>
-          {data && (
-            <div onClick={hidePlayer}>
-              <Artists
-                artists={data?.item.artists}
-                textStyles={{ fontSize: 16 }}
-              />
-            </div>
-          )}
+        <div className="mt-3 flex justify-between items-center">
+          <div>
+            <Typography.Title level={4} style={{ marginBottom: 0 }}>
+              {data?.item?.name}
+            </Typography.Title>
+            {data && (
+              <div onClick={hidePlayer}>
+                <Artists
+                  artists={data?.item.artists}
+                  textStyles={{ fontSize: 16 }}
+                />
+              </div>
+            )}
+          </div>
+          <FavoriteButton sizeClass="text-xl" />
         </div>
         <div className="mt-5">
           <Timeline onChange={setSliderValue} />
@@ -84,9 +90,11 @@ const MobilePlayer = ({ data }: any) => {
         </div>
         <div className="flex justify-center mt-10">
           <div className="flex items-center gap-8">
+            <ShuffleButton />
             <PreviousTrackButton sizeClass="text-4xl" />
             <PauseButton sizeClass="text-6xl" />
             <NextTrackButton sizeClass="text-4xl" />
+            <RepeatModeButton />
           </div>
         </div>
       </div>

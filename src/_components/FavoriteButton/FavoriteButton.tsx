@@ -5,9 +5,10 @@ import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 interface IProps {
   isFavorite: boolean | undefined;
   onClick: (value: boolean) => void;
+  className?: string;
 }
 
-const FavoriteButton = ({ isFavorite, onClick }: IProps) => {
+const FavoriteButton = ({ isFavorite, onClick, className }: IProps) => {
   const addToFavorites = useCallback(() => {
     onClick(true);
   }, [onClick]);
@@ -19,9 +20,17 @@ const FavoriteButton = ({ isFavorite, onClick }: IProps) => {
   return (
     <>
       {isFavorite ? (
-        <HeartFilled onClick={removeFromFavorties} />
+        <HeartFilled
+          className={className}
+          onClick={removeFromFavorties}
+          title="Удалить из любимых"
+        />
       ) : (
-        <HeartOutlined onClick={addToFavorites} />
+        <HeartOutlined
+          className={className}
+          onClick={addToFavorites}
+          title="Добавить в любимое"
+        />
       )}
     </>
   );
