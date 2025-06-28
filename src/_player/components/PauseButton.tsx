@@ -5,10 +5,13 @@ import { PlayerContext } from "../context";
 
 import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
 
-const PauseButton = () => {
+const PauseButton = (props: { sizeClass?: string }) => {
   const { data } = useContext(PlayerContext);
   const [isPlaying, setIsPlaying] = useState<boolean>(data?.is_playing);
   const [isManualChanged, setIsManualChanged] = useState<boolean>(false);
+
+  const size = props.sizeClass ?? "text-[42px]";
+  const className = `cursor-pointer ${size}`;
 
   const playTrack = useCallback(async () => {
     Player.resumePlayback();
@@ -34,13 +37,13 @@ const PauseButton = () => {
       {isPlaying ? (
         <PauseCircleFilled
           title="Пауза"
-          className="text-[42px] cursor-pointer"
+          className={className}
           onClick={stopTrack}
         />
       ) : (
         <PlayCircleFilled
           title="Играть"
-          className="text-[42px] cursor-pointer"
+          className={className}
           onClick={playTrack}
         />
       )}

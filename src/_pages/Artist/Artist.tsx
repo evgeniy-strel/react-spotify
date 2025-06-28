@@ -107,12 +107,12 @@ const Header = () => {
           )}
         </div>
         <div
-          className={`${classes.header__info} w-full truncate flex flex-col`}
+          className={`${classes.header__info} w-full flex flex-col`}
           style={{ flex: "1 1 200px" }}
         >
           {!isLoading ? (
             <Typography.Title
-              className={`${classes.header__title} truncate`}
+              className={`${classes.header__title} line-clamp-[2]`}
               level={1}
             >
               {data?.name}
@@ -227,8 +227,9 @@ const Albums = () => {
                   imgSrc={item.images.at(0).url}
                   title={item.name}
                   onClick={() => onClick(item.id)}
-                  children={<ArtistsComponent artists={item.artists} />}
-                />
+                >
+                  <ArtistsComponent artists={item.artists} />
+                </SquareTemplate>
               ))
             : new Array(16)
                 .fill(0)
@@ -269,8 +270,9 @@ const Singles = () => {
                   key={item.id}
                   imgSrc={item.images.at(0).url}
                   title={item.name}
-                  children={<ArtistsComponent artists={item.artists} />}
-                />
+                >
+                  <ArtistsComponent artists={item.artists} />
+                </SquareTemplate>
               ))
             : new Array(16)
                 .fill(0)

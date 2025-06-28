@@ -5,8 +5,9 @@ import { PlayerContext } from "../context";
 
 import { StepBackwardOutlined } from "@ant-design/icons";
 
-const PreviousTrackButton = () => {
+const PreviousTrackButton = (props: { sizeClass?: string }) => {
   const { refreshData } = useContext(PlayerContext);
+  const size = props.sizeClass ?? "text-[42px]";
 
   const skipToPrevious = useCallback(async () => {
     await Player.skipToPrevious();
@@ -17,7 +18,7 @@ const PreviousTrackButton = () => {
     <>
       <StepBackwardOutlined
         title="Назад"
-        className="text-3xl cursor-pointer"
+        className={`cursor-pointer ${size}`}
         onClick={skipToPrevious}
       />
     </>

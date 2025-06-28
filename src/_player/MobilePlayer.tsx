@@ -84,9 +84,9 @@ const MobilePlayer = ({ data }: any) => {
         </div>
         <div className="flex justify-center mt-10">
           <div className="flex items-center gap-8">
-            <PreviousTrackButton />
-            <PauseButton />
-            <NextTrackButton />
+            <PreviousTrackButton sizeClass="text-4xl" />
+            <PauseButton sizeClass="text-6xl" />
+            <NextTrackButton sizeClass="text-4xl" />
           </div>
         </div>
       </div>

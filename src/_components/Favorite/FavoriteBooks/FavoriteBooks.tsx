@@ -40,13 +40,9 @@ const ItemTemplate = ({ item }: any) => {
   const authors = item.authors.map((author: any) => author.name).join(", ");
 
   return (
-    <SquareTemplate
-      imgSrc={item.images.at(0).url}
-      title={item.name}
-      children={
-        <Typography.Text className="line-clamp-1">{authors}</Typography.Text>
-      }
-    />
+    <SquareTemplate imgSrc={item.images.at(0).url} title={item.name}>
+      <Typography.Text className="line-clamp-1">{authors}</Typography.Text>
+    </SquareTemplate>
   );
 };
 
