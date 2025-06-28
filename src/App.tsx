@@ -14,7 +14,10 @@ export const Content = () => {
   useScrollToTop(scrollRef.current);
 
   return (
-    <div className="h-full overflow-auto py-6" ref={scrollRef}>
+    <div
+      className="h-full overflow-y-auto overflow-x-hidden py-6"
+      ref={scrollRef}
+    >
       <>
         <div className="ml-6 mr-6">
           <BackButton />

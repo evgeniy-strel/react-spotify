@@ -67,7 +67,9 @@ const Artists = ({
         return (
           <div
             key={artist.id}
-            className="flex gap-2 items-center"
+            className={`flex gap-2 items-center ${
+              isLastItem ? "truncate" : ""
+            }`}
             onClick={() => openPageArist(artist.id)}
           >
             {withImage ? (
@@ -88,8 +90,11 @@ const Artists = ({
             ) : (
               <></>
             )}
-            <Typography.Text style={textStyles}>
-              <span key={index} className="hover:text-stone-400 cursor-pointer">
+            <Typography.Text className="truncate" style={textStyles}>
+              <span
+                key={index}
+                className="hover:text-stone-400 cursor-pointer truncate"
+              >
                 {caption}
               </span>
             </Typography.Text>

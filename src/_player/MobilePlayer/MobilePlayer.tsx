@@ -1,16 +1,16 @@
-import { useContext, useState } from "react";
+import { MouseEvent, useContext, useState } from "react";
 
 import classes from "./MobilePlayer.module.css";
-import { Artists } from "../components";
-import PauseButton from "./components/PauseButton";
-import PreviousTrackButton from "./components/PreviousTrackButton";
-import NextTrackButton from "./components/NextTrackButton";
-import { PlayerContext } from "./context";
-import Timeline from "./components/Timeline";
-import { formatTimeTrack } from "../utils";
-import FavoriteButton from "./components/FavoriteButton";
-import RepeatModeButton from "./components/RepeatModeButton";
-import ShuffleButton from "./components/ShuffleButton";
+import { Artists } from "../../components";
+import PauseButton from "./../components/PauseButton";
+import PreviousTrackButton from "../components/PreviousTrackButton";
+import NextTrackButton from "../components/NextTrackButton";
+import { PlayerContext } from "../context";
+import Timeline from "../components/Timeline";
+import { formatTimeTrack } from "../../utils";
+import FavoriteButton from "../components/FavoriteButton";
+import RepeatModeButton from "../components/RepeatModeButton";
+import ShuffleButton from "../components/ShuffleButton";
 
 import { Typography } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -41,6 +41,10 @@ const MobilePlayer = ({ data }: any) => {
 
   const hidePlayer = () => {
     setIsShown(false);
+  };
+
+  const onClickButtons = (event: MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
   };
 
   return (
@@ -92,23 +96,33 @@ const MobilePlayer = ({ data }: any) => {
           <div className="flex items-center gap-8">
             <ShuffleButton />
             <PreviousTrackButton sizeClass="text-4xl" />
-            <PauseButton sizeClass="text-6xl" />
+            <PauseButton sizeClass="text-6xl" isCircleIcon={true} />
             <NextTrackButton sizeClass="text-4xl" />
             <RepeatModeButton />
           </div>
         </div>
       </div>
       {isShown && <Background />}
-      <div className={`${classes.bar} py-4 px-6 gap-2`} onClick={showPlayer}>
+      <div
+        className={`${classes.bar} py-4 px-6 gap-2 items-center`}
+        onClick={showPlayer}
+      >
         <img
           className="rounded-xl"
           src={data?.item.album.images?.at(0).url}
           width={50}
           height={50}
         />
-        <div>
-          <Typography.Text strong={true}>{data?.item?.name}</Typography.Text>
+        <div className="truncate">
+          <Typography.Text className="truncate" strong={true}>
+            {data?.item?.name}
+          </Typography.Text>
           {data?.item.artists && <Artists artists={data?.item.artists} />}
+        </div>
+        <div className="flex gap-6 ml-auto" onClick={onClickButtons}>
+          <FavoriteButton sizeClass="text-2xl" />
+          <PauseButton sizeClass="text-2xl" />
+          <NextTrackButton sizeClass="text-2xl" />
         </div>
       </div>
     </>

@@ -89,8 +89,8 @@ const ItemTemplate = ({ track }: any) => {
   }, [track.id]);
 
   return (
-    <div className="flex w-full justify-between items-center gap-2">
-      <div className="flex items-center gap-2">
+    <div className="flex w-full justify-between items-center gap-2 overflow-hidden">
+      <div className="flex items-center gap-2 shrink-1 min-w-[0]">
         <img
           className="rounded-lg"
           width={54}
@@ -104,7 +104,7 @@ const ItemTemplate = ({ track }: any) => {
           <Artists artists={track.artists} />
         </div>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 shrink-0">
         <div className="ml-auto shrink-0">
           {isFavorite ? (
             <HeartFilled onClick={removeFromFavorties} />

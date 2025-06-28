@@ -1,16 +1,16 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 
 import classes from "./WebPlayer.module.css";
-import { Player as PlayerApi } from "../api";
-import { formatTimeTrack } from "../utils";
-import { Artists } from "../components";
-import FavoriteButton from "./components/FavoriteButton";
-import PauseButton from "./components/PauseButton";
-import PreviousTrackButton from "./components/PreviousTrackButton";
-import NextTrackButton from "./components/NextTrackButton";
-import Timeline from "./components/Timeline";
-import RepeatModeButton from "./components/RepeatModeButton";
-import ShuffleButton from "./components/ShuffleButton";
+import { Player as PlayerApi } from "../../api";
+import { formatTimeTrack } from "../../utils";
+import { Artists } from "../../components";
+import FavoriteButton from "../components/FavoriteButton";
+import PauseButton from "../components/PauseButton";
+import PreviousTrackButton from "../components/PreviousTrackButton";
+import NextTrackButton from "../components/NextTrackButton";
+import Timeline from "../components/Timeline";
+import RepeatModeButton from "../components/RepeatModeButton";
+import ShuffleButton from "../components/ShuffleButton";
 
 import { Slider, Typography } from "antd";
 import { MutedOutlined, SoundOutlined } from "@ant-design/icons";
@@ -86,7 +86,7 @@ const WebPlayer = ({ data, refreshData }: any) => {
           <div className="flex gap-4">
             <ShuffleButton />
             <PreviousTrackButton />
-            <PauseButton />
+            <PauseButton isCircleIcon={true} />
             <NextTrackButton />
             <RepeatModeButton />
           </div>

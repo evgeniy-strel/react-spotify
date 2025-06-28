@@ -3,12 +3,20 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { Player } from "../../api";
 import { PlayerContext } from "../context";
 
-import { PauseCircleFilled, PlayCircleFilled } from "@ant-design/icons";
+import {
+  CaretRightOutlined,
+  PauseCircleFilled,
+  PauseOutlined,
+  PlayCircleFilled,
+} from "@ant-design/icons";
 
-const PauseButton = (props: { sizeClass?: string }) => {
+const PauseButton = (props: { sizeClass?: string; isCircleIcon?: boolean }) => {
   const { data } = useContext(PlayerContext);
   const [isPlaying, setIsPlaying] = useState<boolean>(data?.is_playing);
   const [isManualChanged, setIsManualChanged] = useState<boolean>(false);
+
+  const PauseIcon = props.isCircleIcon ? PauseCircleFilled : PauseOutlined;
+  const PlayIcon = props.isCircleIcon ? PlayCircleFilled : CaretRightOutlined;
 
   const size = props.sizeClass ?? "text-[42px]";
   const className = `cursor-pointer ${size}`;
@@ -35,17 +43,9 @@ const PauseButton = (props: { sizeClass?: string }) => {
   return (
     <>
       {isPlaying ? (
-        <PauseCircleFilled
-          title="Пауза"
-          className={className}
-          onClick={stopTrack}
-        />
+        <PauseIcon title="Пауза" className={className} onClick={stopTrack} />
       ) : (
-        <PlayCircleFilled
-          title="Играть"
-          className={className}
-          onClick={playTrack}
-        />
+        <PlayIcon title="Играть" className={className} onClick={playTrack} />
       )}
     </>
   );

@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "../auth";
 import { Player as PlayerApi } from "../api";
 
-import WebPlayer from "./WebPlayer";
-import MobilePlayer from "./MobilePlayer";
+import WebPlayer from "./WebPlayer/WebPlayer";
+import MobilePlayer from "./MobilePlayer/MobilePlayer";
 import { PlayerContext } from "./context";
 import { useListenHotkeys } from "../hooks";
 
