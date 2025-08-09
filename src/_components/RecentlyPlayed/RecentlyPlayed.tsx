@@ -8,6 +8,7 @@ import Artists from "../Artists/Artists";
 
 import { Skeleton, Typography } from "antd";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
+import { PauseTrackButton } from "../../player";
 
 const COUNT_TRACKS = 16;
 const { Title } = Typography;
@@ -91,12 +92,15 @@ const ItemTemplate = ({ track }: any) => {
   return (
     <div className="flex w-full justify-between items-center gap-2 overflow-hidden">
       <div className="flex items-center gap-2 shrink-1 min-w-[0]">
-        <img
-          className="rounded-lg"
-          width={54}
-          height={54}
-          src={track.album.images?.at(0)?.url}
-        />
+        <div className="relative">
+          <img
+            className="rounded-lg"
+            width={54}
+            height={54}
+            src={track.album.images?.at(0)?.url}
+          />
+          <PauseTrackButton track={track} />
+        </div>
         <div className="truncate mr-1">
           <Typography.Text strong={true} className="block truncate">
             {track.name}

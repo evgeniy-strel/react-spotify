@@ -31,7 +31,9 @@ const Background = () => {
   );
 };
 
-const MobilePlayer = ({ data }: any) => {
+const MobilePlayer = () => {
+  const { data } = useContext(PlayerContext);
+
   const [isShown, setIsShown] = useState<boolean>(false);
   const [sliderValue, setSliderValue] = useState<number>(0);
 

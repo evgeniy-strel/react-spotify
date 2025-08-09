@@ -1,9 +1,10 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useContext } from "react";
 
 import classes from "./WebPlayer.module.css";
 import { Player as PlayerApi } from "../../api";
 import { formatTimeTrack } from "../../utils";
 import { Artists } from "../../components";
+import { PlayerContext } from "../context";
 import FavoriteButton from "../components/FavoriteButton";
 import PauseButton from "../components/PauseButton";
 import PreviousTrackButton from "../components/PreviousTrackButton";
@@ -15,7 +16,9 @@ import ShuffleButton from "../components/ShuffleButton";
 import { Slider, Typography } from "antd";
 import { MutedOutlined, SoundOutlined } from "@ant-design/icons";
 
-const WebPlayer = ({ data, refreshData }: any) => {
+const WebPlayer = () => {
+  const { data } = useContext(PlayerContext);
+
   const ref = useRef<HTMLDivElement>(null);
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [volume, setVolume] = useState<number>(100);

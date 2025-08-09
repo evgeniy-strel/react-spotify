@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Track } from "../../../api";
 import { getAccessToken } from "../../../auth";
 import Artists from "../../Artists/Artists";
 import { SquareTemplate } from "../../../itemTemplates";
 import HorizontalScrollContainer from "../../HorizontalScrollContainer/HorizontalScrollContainer";
+import { PauseTrackButton, PlayerContext } from "../../../player";
 
 const COUNT_SKELETONS = 16;
 
@@ -36,10 +37,24 @@ export const FavoriteTracks = () => {
 const ItemTemplate = ({ item }: any) => {
   const { track } = item;
 
+  const { data, refreshData } = useContext(PlayerContext);
+  const currentPlayingTrack = data?.item?.id;
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    setIsPlaying(currentPlayingTrack === track.id);
+  }, [currentPlayingTrack]);
+
   return (
-    <SquareTemplate imgSrc={track.album.images.at(0).url} title={track.name}>
-      <Artists artists={track.artists} />
-    </SquareTemplate>
+    <div className="relative">
+      <SquareTemplate
+        imgSrc={track.album.images.at(0).url}
+        title={track.name}
+        trackForPause={track}
+      >
+        <Artists artists={track.artists} />
+      </SquareTemplate>
+    </div>
   );
 };
 

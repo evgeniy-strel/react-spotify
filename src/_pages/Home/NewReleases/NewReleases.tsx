@@ -38,7 +38,11 @@ export const NewReleases = () => {
 
 const ItemTemplate = ({ item }: any) => {
   return (
-    <SquareTemplate imgSrc={item.images.at(0).url} title={item.name}>
+    <SquareTemplate
+      imgSrc={item.images.at(0).url}
+      title={item.name}
+      trackForPause={item}
+    >
       <Artists artists={item.artists} />
     </SquareTemplate>
   );

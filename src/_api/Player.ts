@@ -70,6 +70,29 @@ export class Player {
     }
   }
 
+  static async playTrack({ ids, uri }: { ids?: string[]; uri?: string }) {
+    const PATTERN = "spotify:track:";
+    const uris = (uri && [uri]) || ids?.map((id) => `${PATTERN}${id}`);
+
+    try {
+      const response = await instance.put("/me/player/play", { uris });
+      return response.data;
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  static async playContextUri(uri: string) {
+    try {
+      const response = await instance.put("/me/player/play", {
+        context_uri: uri,
+      });
+      return response.data;
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
   static async seekToPosition(ms: number) {
     try {
       const response = await instance.put(

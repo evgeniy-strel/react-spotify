@@ -226,6 +226,7 @@ const Albums = () => {
                   key={item.id}
                   imgSrc={item.images.at(0).url}
                   title={item.name}
+                  trackForPause={item}
                   onClick={() => onClick(item.id)}
                 >
                   <ArtistsComponent artists={item.artists} />
@@ -270,6 +271,7 @@ const Singles = () => {
                   key={item.id}
                   imgSrc={item.images.at(0).url}
                   title={item.name}
+                  trackForPause={item}
                 >
                   <ArtistsComponent artists={item.artists} />
                 </SquareTemplate>

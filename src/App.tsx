@@ -3,7 +3,7 @@ import { useRef } from "react";
 import classes from "./App.module.css";
 import { HomePage, SavedTracksPage, ArtistPage, AlbumPage } from "./pages";
 import { AuthButton, BackButton } from "./components";
-import { Player } from "./player";
+import { PlayerProvider } from "./player";
 
 import { BrowserRouter, Route, Routes } from "react-router";
 import { ConfigProvider, theme } from "antd";
@@ -48,10 +48,9 @@ function App() {
           <div
             className={`${classes.PageLayout__root} box-border h-screen overflow-hidden flex flex-col`}
           >
-            <Content />
-            <div className="mx">
-              <Player />
-            </div>
+            <PlayerProvider>
+              <Content />
+            </PlayerProvider>
           </div>
           <AuthButton />
         </BrowserRouter>

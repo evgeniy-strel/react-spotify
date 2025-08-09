@@ -8,7 +8,7 @@ import MobilePlayer from "./MobilePlayer/MobilePlayer";
 import { PlayerContext } from "./context";
 import { useListenHotkeys } from "../hooks";
 
-const Player = () => {
+const PlayerProvider = ({ children }: any) => {
   const accessToken = getAccessToken();
   const [data, setData] = useState<any>();
   const [isLoading, setIsLoading] = useState(true);
@@ -37,24 +37,35 @@ const Player = () => {
     }
   }, []);
 
+  const refreshTimeline = () => {
+    // setinterval создает замыкание и data неактуальная
+    console.log(data);
+  };
+
   useEffect(() => {
     loadData();
-    const intervalId = setInterval(loadData, 3500);
-    return () => clearInterval(intervalId);
+    const intervalId = setInterval(loadData, 3000);
+    const timelineId = setInterval(refreshTimeline, 1000);
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(timelineId);
+    };
   }, [accessToken]);
 
+  // вот тут неверно так делать, если нет ничего в плеере - обработать с ответом 204
   if (!data) {
     return <></>;
   }
 
   return (
-    <div>
-      <PlayerContext.Provider value={{ data, refreshData: loadData }}>
-        <MobilePlayer data={data} refreshData={loadData} />
-        <WebPlayer data={data} refreshData={loadData} />
-      </PlayerContext.Provider>
-    </div>
+    <PlayerContext.Provider value={{ data, refreshData: loadData }}>
+      {children}
+      <div>
+        <MobilePlayer />
+        <WebPlayer />
+      </div>
+    </PlayerContext.Provider>
   );
 };
 
-export default Player;
+export default PlayerProvider;

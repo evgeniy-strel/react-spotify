@@ -37,7 +37,11 @@ const ItemTemplate = ({ item }: any) => {
   const { album } = item;
 
   return (
-    <SquareTemplate imgSrc={album.images.at(0).url} title={album.name}>
+    <SquareTemplate
+      imgSrc={album.images.at(0).url}
+      title={album.name}
+      trackForPause={album}
+    >
       <Artists artists={album.artists} />
     </SquareTemplate>
   );
