@@ -1,58 +1,97 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import classes from "./Album.module.css";
 import { getAccessToken } from "../../auth";
-import { Albums } from "../../api";
-
-import { useParams } from "react-router";
-import { Skeleton, Typography } from "antd";
+import { Albums, Player } from "../../api";
 import { Artists } from "../../components";
 
-const Header = () => {
-  const accessToken = getAccessToken();
-  let { id } = useParams() as { id: string };
-  const [data, setData] = useState<any>();
-  const ref = useRef<HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
+import { useParams } from "react-router";
+import { Button, Skeleton, Typography } from "antd";
+import { ListTemplate } from "../../itemTemplates";
+import { CaretRightOutlined, PauseOutlined } from "@ant-design/icons";
+import { PlayerContext } from "../../player";
 
-  const loadData = useCallback(async (id: string) => {
-    if (accessToken) {
-      setIsLoading(true);
-      await Albums.getAlbum(id).then(setData);
-      setIsLoading(false);
+interface IAlbumContext {
+  data: Record<string, any>;
+  isLoading: boolean;
+}
+
+const AlbumContext = createContext<IAlbumContext>({
+  data: {},
+  isLoading: true,
+});
+
+const ImageAlbum = () => {
+  const { isLoading, data } = useContext(AlbumContext);
+
+  return isLoading ? (
+    <Skeleton.Node
+      className={`${classes.imgArtist} rounded-3xl`}
+      style={{ width: 260, height: 260 }}
+      active={true}
+    />
+  ) : (
+    <img
+      className={`${classes.imgArtist} rounded-3xl w-[260px]`}
+      src={data.images?.at(0).url}
+    />
+  );
+};
+
+const PlayButton = () => {
+  const { isLoading, data } = useContext(AlbumContext);
+  const { data: playerData, refreshData } = useContext(PlayerContext);
+
+  const isAlbumPlaying = data?.uri && data?.uri === playerData?.context?.uri;
+  const isPlaying = Boolean(isAlbumPlaying && playerData?.is_playing);
+  const Icon = isPlaying ? PauseOutlined : CaretRightOutlined;
+
+  const onClick = useCallback(async () => {
+    if (isPlaying) {
+      await Player.pausePlayback();
+    } else {
+      if (isAlbumPlaying) {
+        await Player.resumePlayback();
+      } else {
+        await Player.playContextUri(data.uri);
+      }
     }
-  }, []);
-
-  useEffect(() => {
-    loadData(id);
-  }, [accessToken, id]);
+    // Задержка нужна тк спотифай не успевает обновить данные
+    setTimeout(refreshData, 250);
+  }, [data, isPlaying]);
 
   return (
-    <div
-      ref={ref}
-      className={`${classes.header} w-full flex gap-4 overflow-hidden`}
+    <Button
+      type="primary"
+      size="large"
+      icon={<Icon />}
+      loading={isLoading}
+      disabled={isLoading}
+      onClick={onClick}
     >
-      <div>
-        {!isLoading ? (
-          <img
-            className={`${classes.imgArtist} rounded-3xl w-[260px]`}
-            src={data.images?.at(0).url}
-          />
-        ) : (
-          <Skeleton.Node
-            className={`${classes.imgArtist} rounded-3xl`}
-            style={{ width: 260, height: 260 }}
-            active={true}
-          />
-        )}
-      </div>
-      <div
-        className={`${classes.header__info} w-full truncate flex flex-col`}
-        style={{ flex: "1 1 200px" }}
-      >
+      Слушать
+    </Button>
+  );
+};
+
+const Header = () => {
+  const { isLoading, data } = useContext(AlbumContext);
+
+  return (
+    <div className={`${classes.header} w-full flex gap-4 overflow-hidden`}>
+      <ImageAlbum />
+      <div className={`${classes.header__info} w-full flex flex-col`}>
+        <Typography.Title level={3}>Альбом</Typography.Title>
         {!isLoading ? (
           <Typography.Title
-            className={`${classes.header__title} truncate`}
+            className={`${classes.header__title} line-clamp-2 w-full`}
             level={1}
           >
             {data?.name}
@@ -72,37 +111,67 @@ const Header = () => {
           <Typography.Text> • </Typography.Text>
           <Typography.Text>{data?.total_tracks} треков</Typography.Text>
         </div>
-        <div className="mb-6">
-          {/* {!isLoading ? (
-            <Typography.Text>
-              {data?.followers.total.toLocaleString() + " "} подписчиков
-            </Typography.Text>
-          ) : (
-            <div className="mt-8">
-              <Skeleton.Node
-                className="w-full"
-                style={{ height: "1rem", width: "10rem" }}
-                active={true}
-              />
-            </div>
-          )} */}
-          {/* <SubscribeButton className="mt-1" artistId={id} /> */}
+        <div className="mt-4">
+          <PlayButton />
         </div>
-        {/* <div>
-            <Typography.Text className="block">Популярность</Typography.Text>
-            <Progress percent={data?.popularity} size={[300, 10]} />
-          </div>
-        </div> */}
+      </div>
+    </div>
+  );
+};
+
+const COUNT_SKELETONS = 12;
+
+const Tracks = () => {
+  const { isLoading, data } = useContext(AlbumContext);
+
+  return (
+    <div>
+      <div className={`grid gap-x-5 gap-y-3`}>
+        {!isLoading
+          ? data.tracks.items.map((track: any, index: number) => {
+              return (
+                <ListTemplate
+                  key={track.id}
+                  track={track}
+                  leftContent={
+                    <div className="p-3 text-gray-500">{index + 1}</div>
+                  }
+                />
+              );
+            })
+          : new Array(COUNT_SKELETONS)
+              .fill(0)
+              .map((_, index) => <ListTemplate.Skeleton key={index} />)}
       </div>
     </div>
   );
 };
 
 const Album = () => {
+  const accessToken = getAccessToken();
+  let { id } = useParams() as { id: string };
+  const [data, setData] = useState<any>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const loadData = useCallback(async (id: string) => {
+    if (accessToken) {
+      setIsLoading(true);
+      await Albums.getAlbum(id).then(setData);
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData(id);
+  }, [accessToken, id]);
+
   return (
-    <div className="ml-6 mr-6 mt-4 box-border flex flex-col gap-4">
-      <Header />
-    </div>
+    <AlbumContext.Provider value={{ isLoading, data }}>
+      <div className="ml-6 mr-6 mt-4 box-border flex flex-col gap-6">
+        <Header />
+        <Tracks />
+      </div>
+    </AlbumContext.Provider>
   );
 };
 

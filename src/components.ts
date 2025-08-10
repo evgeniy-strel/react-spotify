@@ -6,3 +6,4 @@ export { default as BackButton } from "./_components/BackButton/BackButton";
 export { default as Artists } from "./_components/Artists/Artists";
 export { default as HorizontalScrollContainer } from "./_components/HorizontalScrollContainer/HorizontalScrollContainer";
 export { default as FavoriteButton } from "./_components/FavoriteButton/FavoriteButton";
+export { default as PauseButton } from "./_components/PauseButton/PauseButton";

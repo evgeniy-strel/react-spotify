@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { Player } from "../../api";
-import { PlayerContext } from "../context";
+import { PlayerContext } from "../../player";
 
 import {
   CaretRightOutlined,

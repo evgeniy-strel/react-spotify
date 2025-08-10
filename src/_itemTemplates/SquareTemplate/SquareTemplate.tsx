@@ -1,7 +1,7 @@
 import { JSX, MouseEventHandler } from "react";
 import classes from "./SquareTemplate.module.css";
 
-import { PauseTrackButton } from "../player";
+import { PauseTrackButton } from "../../player";
 
 import { Skeleton, Typography } from "antd";
 

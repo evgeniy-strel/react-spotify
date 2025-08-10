@@ -6,10 +6,9 @@ import { Artists, ERoutes, Users } from "../../api";
 import { getAccessToken } from "../../auth";
 import {
   Artists as ArtistsComponent,
-  RecentlyPlayed,
   HorizontalScrollContainer,
 } from "../../components";
-import { SquareTemplate } from "../../itemTemplates";
+import { ListTemplate, SquareTemplate } from "../../itemTemplates";
 
 import { useNavigate, useParams } from "react-router";
 import { Button, Progress, Skeleton, Typography } from "antd";
@@ -106,10 +105,7 @@ const Header = () => {
             />
           )}
         </div>
-        <div
-          className={`${classes.header__info} w-full flex flex-col`}
-          style={{ flex: "1 1 200px" }}
-        >
+        <div className={`${classes.header__info} w-full flex flex-col`}>
           {!isLoading ? (
             <Typography.Title
               className={`${classes.header__title} line-clamp-[2]`}
@@ -179,13 +175,11 @@ const TopTracks = ({ tracks }: any) => {
           ? data.tracks
               ?.slice(0, COUNT_TRACKS)
               .map((track: any, index: number) => {
-                return (
-                  <RecentlyPlayed.ItemTemplate key={track.id} track={track} />
-                );
+                return <ListTemplate key={track.id} track={track} />;
               })
           : new Array(COUNT_TRACKS)
               .fill(0)
-              .map((_, index) => <RecentlyPlayed.ItemSkeleton key={index} />)}
+              .map((_, index) => <ListTemplate.Skeleton key={index} />)}
       </div>
     </div>
   );
