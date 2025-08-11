@@ -10,7 +10,7 @@ import {
 import classes from "./Album.module.css";
 import { getAccessToken } from "../../auth";
 import { Albums, Player } from "../../api";
-import { Artists } from "../../components";
+import { Artists, AudioVisualizer } from "../../components";
 
 import { useParams } from "react-router";
 import { Button, Skeleton, Typography } from "antd";
@@ -123,18 +123,35 @@ const COUNT_SKELETONS = 12;
 
 const Tracks = () => {
   const { isLoading, data } = useContext(AlbumContext);
+  const { data: playerData } = useContext(PlayerContext);
 
   return (
     <div>
       <div className={`grid gap-x-5 gap-y-3`}>
         {!isLoading
           ? data.tracks.items.map((track: any, index: number) => {
+              const isTrackPlaying = track.uri === playerData?.item?.uri;
+              const isPlaying = isTrackPlaying && playerData?.is_playing;
+
               return (
                 <ListTemplate
                   key={track.id}
                   track={track}
+                  visualizer={false}
                   leftContent={
-                    <div className="p-3 text-gray-500">{index + 1}</div>
+                    isPlaying ? (
+                      <div className="p-1.5">
+                        <AudioVisualizer />
+                      </div>
+                    ) : (
+                      <div
+                        className={`p-2 min-w-[32px] ${
+                          isTrackPlaying ? "text-blue-500" : "text-gray-500"
+                        }`}
+                      >
+                        {index + 1}
+                      </div>
+                    )
                   }
                 />
               );

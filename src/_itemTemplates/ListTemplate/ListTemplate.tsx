@@ -1,9 +1,9 @@
-import { FC, JSX, useCallback, useMemo, useState } from "react";
+import { JSX, useCallback, useContext, useMemo, useState } from "react";
 
-import { PauseTrackButton } from "../../player";
+import { PauseTrackButton, PlayerContext } from "../../player";
 import { formatTimeTrack } from "../../utils";
 import { Track } from "../../api";
-import { Artists } from "../../components";
+import { Artists, AudioVisualizer } from "../../components";
 
 import { Skeleton, Typography } from "antd";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
@@ -11,14 +11,18 @@ import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 interface IProps {
   track: Record<string, any>;
   leftContent?: JSX.Element;
+  visualizer?: boolean;
 }
 
-const ListTemplate = ({ track, leftContent }: IProps) => {
+const ListTemplate = ({ track, leftContent, visualizer = true }: IProps) => {
   const [isFavorite, setIsFavorite] = useState(track.is_favorite);
   const duration = useMemo(
     () => formatTimeTrack(track.duration_ms),
     [track.duration_ms]
   );
+  const { data: playerData } = useContext(PlayerContext);
+  const isTrackPlaying = track.uri === playerData?.item?.uri;
+  const isPlaying = isTrackPlaying && playerData?.is_playing;
 
   const addToFavorites = useCallback(() => {
     Track.addToFavorite([track.id]);
@@ -31,12 +35,12 @@ const ListTemplate = ({ track, leftContent }: IProps) => {
   }, [track.id]);
 
   return (
-    <div className="flex w-full justify-between items-center gap-2 overflow-hidden">
+    <div className="flex w-full justify-between items-center gap-2">
       <div className="flex items-center gap-2 shrink-1 min-w-[0]">
         <div className="relative">
           {track.album?.images?.length ? (
             <img
-              className="rounded-lg"
+              className={`rounded-lg ${isPlaying ? "opacity-[0.5]" : ""}`}
               width={54}
               height={54}
               src={track.album.images?.at(0)?.url}
@@ -45,6 +49,11 @@ const ListTemplate = ({ track, leftContent }: IProps) => {
             leftContent
           ) : (
             <></>
+          )}
+          {isPlaying && visualizer && (
+            <div className="flex w-full h-full absolute left-[0] top-[0] items-center justify-center cursor-pointer">
+              <AudioVisualizer color="white" />
+            </div>
           )}
           <PauseTrackButton track={track} />
         </div>
