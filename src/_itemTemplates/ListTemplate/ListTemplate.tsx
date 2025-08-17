@@ -35,7 +35,7 @@ const ListTemplate = ({ track, leftContent, visualizer = true }: IProps) => {
   }, [track.id]);
 
   return (
-    <div className="flex w-full justify-between items-center gap-2">
+    <div className="flex w-full justify-between items-center gap-2 min-w-[0]">
       <div className="flex items-center gap-2 shrink-1 min-w-[0]">
         <div className="relative">
           {track.album?.images?.length ? (

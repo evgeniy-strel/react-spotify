@@ -15,7 +15,7 @@ export const Content = () => {
 
   return (
     <div
-      className="h-full overflow-y-auto overflow-x-hidden py-6"
+      className="h-full overflow-y-auto overflow-x-hidden py-6 flex flex-col"
       ref={scrollRef}
     >
       <>

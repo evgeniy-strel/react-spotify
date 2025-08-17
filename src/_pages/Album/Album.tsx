@@ -3,18 +3,23 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 
 import classes from "./Album.module.css";
 import { getAccessToken } from "../../auth";
-import { Albums, Player } from "../../api";
-import { Artists, AudioVisualizer } from "../../components";
+import { Albums, Artists, ERoutes, Player } from "../../api";
+import {
+  Artists as ArtistsComponent,
+  AudioVisualizer,
+  HorizontalScrollContainer,
+} from "../../components";
 
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button, Skeleton, Typography } from "antd";
-import { ListTemplate } from "../../itemTemplates";
+import { ListTemplate, SquareTemplate } from "../../itemTemplates";
 import { CaretRightOutlined, PauseOutlined } from "@ant-design/icons";
 import { PlayerContext } from "../../player";
 
@@ -39,7 +44,7 @@ const ImageAlbum = () => {
     />
   ) : (
     <img
-      className={`${classes.imgArtist} rounded-3xl w-[260px]`}
+      className={`${classes.imgArtist} rounded-3xl w-[260px] h-[260px]`}
       src={data.images?.at(0).url}
     />
   );
@@ -104,7 +109,7 @@ const Header = () => {
           />
         )}
         <div className="flex gap-4">
-          {data && <Artists artists={data.artists} withImage={true} />}
+          {data && <ArtistsComponent artists={data.artists} withImage={true} />}
         </div>
         <div className="flex gap-1 mt-2">
           <Typography.Text>{data?.release_date.split("-")[0]}</Typography.Text>
@@ -120,6 +125,70 @@ const Header = () => {
 };
 
 const COUNT_SKELETONS = 12;
+
+const ReccomendedAlbums = () => {
+  const { isLoading: albumDataIsLoading, data: albumData } =
+    useContext(AlbumContext);
+  const navigate = useNavigate();
+
+  const [data, setData] = useState<any>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const artistsIds = useMemo(
+    () => albumData?.artists?.map((artist: any) => artist.id),
+    [albumData]
+  );
+
+  const loadData = useCallback(async () => {
+    setIsLoading(true);
+    const promises = artistsIds.map((id: string) => Artists.getAlbums(id));
+    const results = await Promise.all(promises);
+    const allAlbums = results.reduce(
+      (albums: Array<object>, result) => [...albums, ...result.items],
+      []
+    );
+    const otherAlbums = allAlbums.filter(
+      (album: any) => album.id !== albumData.id
+    );
+    setData(otherAlbums);
+    setIsLoading(false);
+  }, [artistsIds]);
+
+  useEffect(() => {
+    if (artistsIds?.length) {
+      loadData();
+    }
+  }, [artistsIds]);
+
+  const onClick = useCallback((id: string) => {
+    navigate(`${ERoutes.Album}/${id}`);
+  }, []);
+
+  return (
+    <div className="h-full">
+      <Typography.Title level={3}>Другие альбомы</Typography.Title>
+      <div className="flex flex-col gap-6 h-full overflow-scroll pr-2">
+        <>
+          {!isLoading
+            ? data?.map((item: any, index: number) => (
+                <SquareTemplate
+                  key={item.id}
+                  imgSrc={item.images.at(0).url}
+                  title={item.name}
+                  trackForPause={item}
+                  widthClassName="w-full"
+                  onClick={() => onClick(item.id)}
+                >
+                  <ArtistsComponent artists={item.artists} />
+                </SquareTemplate>
+              ))
+            : new Array(16)
+                .fill(0)
+                .map((_, index) => <SquareTemplate.Skeleton key={index} />)}
+        </>
+      </div>
+    </div>
+  );
+};
 
 const Tracks = () => {
   const { isLoading, data } = useContext(AlbumContext);
@@ -178,15 +247,48 @@ const Album = () => {
     }
   }, []);
 
+  const contentRef = useRef<any>(null);
+
   useEffect(() => {
     loadData(id);
   }, [accessToken, id]);
 
+  const [isSmall, setIsSmall] = useState(false);
+
+  useEffect(() => {
+    if (!contentRef.current) {
+      return;
+    }
+    const handleScroll = () => {
+      setIsSmall(contentRef.current.scrollTop > 50);
+    };
+    contentRef.current.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <AlbumContext.Provider value={{ isLoading, data }}>
-      <div className="ml-6 mr-6 mt-4 box-border flex flex-col gap-6">
-        <Header />
-        <Tracks />
+      <div
+        className={`${classes.albumContainer} h-full ml-6 mr-6 mt-4 box-border flex gap-8 box-border`}
+      >
+        <div
+          ref={contentRef}
+          className="w-full h-full flex flex-col gap-6 overflow-y-auto py-[-6]"
+        >
+          <div
+            className={`z-[1] sticky top-[0] ${
+              isSmall ? "h-[100px]" : "h-auto"
+            }`}
+          >
+            <Header />
+          </div>
+          <div className="h-full pr-4">
+            <Tracks />
+          </div>
+        </div>
+        <div className={`${classes.reccomendedAlbums} h-full w-[300px]`}>
+          <ReccomendedAlbums />
+        </div>
       </div>
     </AlbumContext.Provider>
   );

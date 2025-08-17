@@ -10,6 +10,7 @@ interface IProps {
   title: string;
   children: JSX.Element;
   trackForPause?: object;
+  widthClassName?: string;
   onClick?: MouseEventHandler<HTMLImageElement>;
 }
 
@@ -18,12 +19,13 @@ const SquareTemplate = ({
   title,
   children,
   onClick,
+  widthClassName = "w-[200px]",
   trackForPause,
 }: IProps) => {
   const cursorClass = onClick ? "cursor-pointer" : "";
 
   return (
-    <div className="w-[200px] flex flex-col gap-2 shrink-0">
+    <div className={`${widthClassName} flex flex-col gap-2 shrink-0`}>
       <div className="relative" onClick={onClick}>
         <img className={`${classes.img} ${cursorClass}`} src={imgSrc} />
         {trackForPause && (

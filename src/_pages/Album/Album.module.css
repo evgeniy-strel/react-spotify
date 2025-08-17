@@ -3,7 +3,9 @@
 }
 
 .header {
-
+    /* top: 0;
+    height: 200px;
+    position: sticky; */
 }
 
 .header__title {
@@ -11,8 +13,20 @@
             margin-top: 0!important;
 }
 
-.imgArtist {
+.albumContainer {
+    overflow: hidden;
+}
 
+@media screen and (max-width: 1024px) {
+    .albumContainer {
+        overflow: visible;
+        height: auto;
+        display: block;
+    }
+
+    .reccomendedAlbums {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -29,6 +43,10 @@
     .header__title {
         font-size: 3rem!important;
         line-height: 3rem!important;
+        text-align: center;
+    }
+    .reccomendedAlbums {
+        display: none;
     }
 }
 
