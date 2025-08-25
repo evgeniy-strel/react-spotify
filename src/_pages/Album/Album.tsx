@@ -33,18 +33,18 @@ const AlbumContext = createContext<IAlbumContext>({
   isLoading: true,
 });
 
-const ImageAlbum = () => {
+const ImageAlbum = ({ size = 260 }: { size?: number }) => {
   const { isLoading, data } = useContext(AlbumContext);
 
   return isLoading ? (
     <Skeleton.Node
       className={`${classes.imgArtist} rounded-3xl`}
-      style={{ width: 260, height: 260 }}
+      style={{ width: size, height: size }}
       active={true}
     />
   ) : (
     <img
-      className={`${classes.imgArtist} rounded-3xl w-[260px] h-[260px]`}
+      className={`${classes.imgArtist} rounded-3xl w-[${size}px] h-[${size}px]`}
       src={data.images?.at(0).url}
     />
   );
@@ -120,6 +120,35 @@ const Header = () => {
           <PlayButton />
         </div>
       </div>
+    </div>
+  );
+};
+
+const StickyHeader = ({ isVisible }: { isVisible: boolean }) => {
+  const { isLoading, data } = useContext(AlbumContext);
+
+  const className = `${classes.headerSticky} ${
+    isVisible ? classes.headerSticky__visible : ""
+  }`;
+
+  return (
+    <div
+      className={`${className} flex gap-3 items-center justify-center sticky top-0 overflow-hidden shrink-0 z-[2] px-3 rounded-xl`}
+    >
+      <div
+        className={`${classes.bgImage} absolute left-0 w-full h-full`}
+        style={{
+          backgroundImage: `url(${data?.images?.at(0).url})`,
+        }}
+      ></div>
+      <ImageAlbum size={40} />
+      <Typography.Title
+        className={`line-clamp-2 w-full`}
+        level={2}
+        style={{ margin: 0, lineHeight: "inherit" }}
+      >
+        {data?.name}
+      </Typography.Title>
     </div>
   );
 };
@@ -253,14 +282,14 @@ const Album = () => {
     loadData(id);
   }, [accessToken, id]);
 
-  const [isSmall, setIsSmall] = useState(false);
+  const [isVisibleStickyHeader, setIsVisibleStickyHeader] = useState(false);
 
   useEffect(() => {
     if (!contentRef.current) {
       return;
     }
     const handleScroll = () => {
-      setIsSmall(contentRef.current.scrollTop > 50);
+      setIsVisibleStickyHeader(contentRef.current.scrollTop > 200);
     };
     contentRef.current.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -273,16 +302,13 @@ const Album = () => {
       >
         <div
           ref={contentRef}
-          className="w-full h-full flex flex-col gap-6 overflow-y-auto py-[-6]"
+          className="w-full h-full flex flex-col overflow-y-auto relative py-[-6]"
         >
-          <div
-            className={`z-[1] sticky top-[0] ${
-              isSmall ? "h-[100px]" : "h-auto"
-            }`}
-          >
+          <StickyHeader isVisible={isVisibleStickyHeader} />
+          <div className={`z-[1] top-[0] h-auto`}>
             <Header />
           </div>
-          <div className="h-full pr-4">
+          <div className="h-full pr-4 mt-6">
             <Tracks />
           </div>
         </div>

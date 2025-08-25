@@ -14,8 +14,8 @@ export default function AudioVisualizer(props: IProps) {
 
   return (
     <div className={classes.audioVisualizer}>
-      {ITERATOR.map((_: any) => (
-        <span style={{ background: color }}></span>
+      {ITERATOR.map((_: any, index: number) => (
+        <span style={{ background: color }} key={index}></span>
       ))}
     </div>
   );
