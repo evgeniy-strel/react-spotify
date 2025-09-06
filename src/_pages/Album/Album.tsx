@@ -15,6 +15,7 @@ import {
   Artists as ArtistsComponent,
   AudioVisualizer,
   HorizontalScrollContainer,
+  PlayButton,
 } from "../../components";
 
 import { useNavigate, useParams } from "react-router";
@@ -50,39 +51,29 @@ const ImageAlbum = ({ size = 260 }: { size?: number }) => {
   );
 };
 
-const PlayButton = () => {
+const ListenButton = () => {
   const { isLoading, data } = useContext(AlbumContext);
-  const { data: playerData, refreshData } = useContext(PlayerContext);
+  const { data: playerData } = useContext(PlayerContext);
 
-  const isAlbumPlaying = data?.uri && data?.uri === playerData?.context?.uri;
+  const isAlbumPlaying =
+    data?.uri &&
+    [playerData?.context?.uri, playerData?.item?.album?.uri].includes(data.uri);
   const isPlaying = Boolean(isAlbumPlaying && playerData?.is_playing);
-  const Icon = isPlaying ? PauseOutlined : CaretRightOutlined;
 
-  const onClick = useCallback(async () => {
-    if (isPlaying) {
-      await Player.pausePlayback();
+  const playCallback = useCallback(async () => {
+    if (isAlbumPlaying) {
+      await Player.resumePlayback();
     } else {
-      if (isAlbumPlaying) {
-        await Player.resumePlayback();
-      } else {
-        await Player.playContextUri(data.uri);
-      }
+      await Player.playContextUri(data.uri);
     }
-    // Задержка нужна тк спотифай не успевает обновить данные
-    setTimeout(refreshData, 250);
-  }, [data, isPlaying]);
+  }, [isAlbumPlaying, data]);
 
   return (
-    <Button
-      type="primary"
-      size="large"
-      icon={<Icon />}
-      loading={isLoading}
-      disabled={isLoading}
-      onClick={onClick}
-    >
-      Слушать
-    </Button>
+    <PlayButton
+      isLoading={isLoading}
+      isPlaying={isPlaying}
+      playCallback={playCallback}
+    />
   );
 };
 
@@ -117,7 +108,7 @@ const Header = () => {
           <Typography.Text>{data?.total_tracks} треков</Typography.Text>
         </div>
         <div className="mt-4">
-          <PlayButton />
+          <ListenButton />
         </div>
       </div>
     </div>

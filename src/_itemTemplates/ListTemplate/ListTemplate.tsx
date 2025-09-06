@@ -37,7 +37,7 @@ const ListTemplate = ({ track, leftContent, visualizer = true }: IProps) => {
   return (
     <div className="flex w-full justify-between items-center gap-2 min-w-[0]">
       <div className="flex items-center gap-2 shrink-1 min-w-[0]">
-        <div className="relative">
+        <div className="relative shrink-0">
           {track.album?.images?.length ? (
             <img
               className={`rounded-lg ${isPlaying ? "opacity-[0.5]" : ""}`}

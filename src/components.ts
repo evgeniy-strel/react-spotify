@@ -7,4 +7,5 @@ export { default as Artists } from "./_components/Artists/Artists";
 export { default as HorizontalScrollContainer } from "./_components/HorizontalScrollContainer/HorizontalScrollContainer";
 export { default as FavoriteButton } from "./_components/FavoriteButton/FavoriteButton";
 export { default as PauseButton } from "./_components/PauseButton/PauseButton";
+export { default as PlayButton } from "./_components/PlayButton/PlayButton";
 export { default as AudioVisualizer } from "./_components/AudioVisualizer/AudioVisualizer";
