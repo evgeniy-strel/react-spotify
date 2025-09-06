@@ -105,28 +105,33 @@ const MobilePlayer = () => {
         </div>
       </div>
       {isShown && <Background />}
-      <div
-        className={`${classes.bar} py-4 px-6 gap-2 items-center`}
-        onClick={showPlayer}
-      >
-        <img
-          className="rounded-xl"
-          src={data?.item.album.images?.at(0).url}
-          width={50}
-          height={50}
-        />
-        <div className="truncate">
-          <Typography.Text className="truncate" strong={true}>
-            {data?.item?.name}
-          </Typography.Text>
-          {data?.item.artists && <Artists artists={data?.item.artists} />}
+      {!isShown && (
+        <div className={`${classes.bar}`}>
+          <Timeline onChange={setSliderValue} />
+          <div
+            className={`flex pb-4 py-2 px-6 gap-2 items-center`}
+            onClick={showPlayer}
+          >
+            <img
+              className="rounded-xl"
+              src={data?.item.album.images?.at(0).url}
+              width={50}
+              height={50}
+            />
+            <div className="truncate">
+              <Typography.Text className="truncate" strong={true}>
+                {data?.item?.name}
+              </Typography.Text>
+              {data?.item.artists && <Artists artists={data?.item.artists} />}
+            </div>
+            <div className="flex gap-6 ml-auto" onClick={onClickButtons}>
+              <FavoriteButton sizeClass="text-2xl" />
+              <PauseButton sizeClass="text-2xl" />
+              <NextTrackButton sizeClass="text-2xl" />
+            </div>
+          </div>
         </div>
-        <div className="flex gap-6 ml-auto" onClick={onClickButtons}>
-          <FavoriteButton sizeClass="text-2xl" />
-          <PauseButton sizeClass="text-2xl" />
-          <NextTrackButton sizeClass="text-2xl" />
-        </div>
-      </div>
+      )}
     </>
   );
 };

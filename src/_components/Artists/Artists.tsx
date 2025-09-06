@@ -18,7 +18,7 @@ interface IProps {
  */
 const Artists = ({
   artists: initArtists,
-  className,
+  className = "",
   attr,
   withImage,
   textStyles,

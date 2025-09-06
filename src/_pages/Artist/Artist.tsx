@@ -1,18 +1,65 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import classes from "./Artist.module.css";
 
-import { Artists, ERoutes, Users } from "../../api";
+import { Artists, ERoutes, Player, Users } from "../../api";
 import { getAccessToken } from "../../auth";
 import {
   Artists as ArtistsComponent,
   HorizontalScrollContainer,
+  PlayButton,
 } from "../../components";
 import { ListTemplate, SquareTemplate } from "../../itemTemplates";
 
 import { useNavigate, useParams } from "react-router";
 import { Button, Progress, Skeleton, Typography } from "antd";
 import { HeartFilled, HeartOutlined } from "@ant-design/icons";
+import { PlayerContext } from "../../player";
+
+interface IListenButtonProps {
+  isLoading: boolean;
+  artistId: string;
+}
+
+const ListenButton = ({ artistId, isLoading }: IListenButtonProps) => {
+  const { data: playerData } = useContext(PlayerContext);
+
+  const getAllPlayingUri = () => {
+    const artitstUri =
+      playerData?.item.artists?.map((artist: any) => artist.uri) || [];
+    const currentArtistUri = playerData?.context?.uri;
+
+    return [...artitstUri, currentArtistUri];
+  };
+
+  const allUris = useMemo(() => getAllPlayingUri(), [playerData]);
+
+  const isArtistPlaying = allUris.some((uri) => uri?.includes(artistId));
+  const isPlaying = Boolean(isArtistPlaying && playerData?.is_playing);
+
+  const playCallback = useCallback(async () => {
+    if (isArtistPlaying) {
+      await Player.resumePlayback();
+    } else {
+      await Player.playContextUri("spotify:artist:" + artistId);
+    }
+  }, [isArtistPlaying, artistId]);
+
+  return (
+    <PlayButton
+      isLoading={isLoading}
+      isPlaying={isPlaying}
+      playCallback={playCallback}
+    />
+  );
+};
 
 /**
  * Кнопка подписки/отписки от артиста. Сама вычисляет состояние, на время загрузки дизейблится
@@ -53,8 +100,8 @@ const SubscribeButton = ({
   return (
     <div className={className}>
       <Button
-        type="primary"
-        size="middle"
+        type="default"
+        size="small"
         icon={isSubscribed ? <HeartFilled /> : <HeartOutlined />}
         loading={isLoading}
         disabled={isLoading}
@@ -91,16 +138,16 @@ const Header = () => {
         ref={ref}
         className={`${classes.header} w-full flex gap-4 overflow-hidden`}
       >
-        <div>
+        <div className="shrink-0">
           {!isLoading ? (
             <img
-              className={`${classes.imgArtist} rounded-3xl w-[260px]`}
+              className={`${classes.imgArtist} rounded-3xl w-[250px] shrink-0`}
               src={data.images?.at(0).url}
             />
           ) : (
             <Skeleton.Node
               className={`${classes.imgArtist} rounded-3xl`}
-              style={{ width: 260, height: 260 }}
+              style={{ width: 250, height: 250 }}
               active={true}
             />
           )}
@@ -115,26 +162,27 @@ const Header = () => {
             </Typography.Title>
           ) : (
             <Skeleton.Node
-              className="w-full mt-2"
+              className="w-full mt-2 mb-4"
               style={{ height: "3rem", width: "12rem" }}
               active={true}
             />
           )}
-          <div className="mb-6">
+          <div className="mb-4">
+            <ListenButton isLoading={isLoading} artistId={id} />
+          </div>
+          <div className="flex items-baseline gap-2 mb-4">
+            <SubscribeButton className="mt-1" artistId={id} />
             {!isLoading ? (
               <Typography.Text>
                 {data?.followers.total.toLocaleString() + " "} подписчиков
               </Typography.Text>
             ) : (
-              <div className="mt-8">
-                <Skeleton.Node
-                  className="w-full"
-                  style={{ height: "1rem", width: "10rem" }}
-                  active={true}
-                />
-              </div>
+              <Skeleton.Node
+                className="w-full"
+                style={{ height: "1rem", width: "10rem" }}
+                active={true}
+              />
             )}
-            <SubscribeButton className="mt-1" artistId={id} />
           </div>
           <div>
             <Typography.Text className="block">Популярность</Typography.Text>

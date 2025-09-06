@@ -36,18 +36,11 @@ const PlayerProvider = ({ children }: any) => {
     }
   }, []);
 
-  const refreshTimeline = () => {
-    // setinterval создает замыкание и data неактуальная
-    console.log(data);
-  };
-
   useEffect(() => {
     loadData();
     const intervalId = setInterval(loadData, 3000);
-    const timelineId = setInterval(refreshTimeline, 1000);
     return () => {
       clearInterval(intervalId);
-      clearInterval(timelineId);
     };
   }, [accessToken]);
 
