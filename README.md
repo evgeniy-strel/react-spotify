@@ -89,7 +89,7 @@
 > ⚠️ Для проигрывания музыки необходим **Spotify Premium** (ограничение API) и иметь открытую соседнюю вкладку страницы Spotify.
 
 
-1) Слонируйте репозиторий
+1) Склонируйте репозиторий
 ```bash
 git clone https://github.com/evgeniy-strel/react-spotify.git
 ```
