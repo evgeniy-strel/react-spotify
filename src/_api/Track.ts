@@ -7,9 +7,7 @@ export class Track {
     const urlIds = ids.join(IDS_SEPARATE);
 
     try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/me/tracks/contains?ids=${urlIds}`
-      );
+      const response = await instance.get(`/me/tracks/contains?ids=${urlIds}`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -19,10 +17,7 @@ export class Track {
 
   static async addToFavorite(ids: string[]): Promise<void> {
     try {
-      const response = await instance.put(
-        `https://api.spotify.com/v1/me/tracks`,
-        { ids }
-      );
+      const response = await instance.put(`/me/tracks`, { ids });
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -33,9 +28,7 @@ export class Track {
     const urlIds = ids.join(IDS_SEPARATE);
 
     try {
-      const response = await instance.delete(
-        `https://api.spotify.com/v1/me/tracks?ids=${urlIds}`
-      );
+      const response = await instance.delete(`/me/tracks?ids=${urlIds}`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -44,42 +37,7 @@ export class Track {
 
   static async getFavorites() {
     try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/me/tracks`
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  static async getRelated() {
-    try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/artists/0XNKQFs2Ewb3y0VsFUFc5l/related-artists`
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  static async getAlbums(id: string) {
-    try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/artists/${id}/albums`
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  static async getAlbumTracks(id: string) {
-    try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/albums/${id}/tracks`
-      );
+      const response = await instance.get(`/me/tracks`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);

@@ -1,17 +1,19 @@
 import { useRef } from "react";
 
 import classes from "./App.module.css";
-import { HomePage, SavedTracksPage, ArtistPage, AlbumPage } from "./pages";
-import { AuthButton, BackButton } from "./components";
+import { HomePage, ArtistPage, AlbumPage } from "./pages";
+import { BackButton } from "./components";
 import { PlayerProvider } from "./player";
 
 import { BrowserRouter, Route, Routes } from "react-router";
 import { ConfigProvider, theme } from "antd";
 import { useScrollToTop } from "./hooks";
+import { useFetchAccessToken } from "./auth";
 
 export const Content = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   useScrollToTop(scrollRef.current);
+  useFetchAccessToken();
 
   return (
     <div
@@ -24,7 +26,6 @@ export const Content = () => {
         </div>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/saved_tracks" element={<SavedTracksPage />} />
           <Route path="/artist/:id" element={<ArtistPage />} />
           <Route path="/album/:id" element={<AlbumPage />} />
         </Routes>
@@ -52,7 +53,6 @@ function App() {
               <Content />
             </PlayerProvider>
           </div>
-          <AuthButton />
         </BrowserRouter>
       </ConfigProvider>
     </div>

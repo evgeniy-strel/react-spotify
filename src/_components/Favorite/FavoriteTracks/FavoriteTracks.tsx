@@ -5,7 +5,7 @@ import { getAccessToken } from "../../../auth";
 import Artists from "../../Artists/Artists";
 import { SquareTemplate } from "../../../itemTemplates";
 import HorizontalScrollContainer from "../../HorizontalScrollContainer/HorizontalScrollContainer";
-import { PauseTrackButton, PlayerContext } from "../../../player";
+import { PlayerContext } from "../../../player";
 
 const COUNT_SKELETONS = 16;
 

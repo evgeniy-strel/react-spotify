@@ -1,8 +1,10 @@
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import React, { useCallback } from "react";
-import { useLocation, useNavigate, ScrollRestoration } from "react-router";
 import { ERoutes } from "../../api";
 
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useCallback } from "react";
+import { useLocation, useNavigate } from "react-router";
+
+/** Кнопка перехода на предыщую страницу */
 const BackButton = () => {
   const navigate = useNavigate();
   const location = useLocation();

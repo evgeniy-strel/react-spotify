@@ -5,7 +5,7 @@ import { Track } from "./Track";
 export class Artists {
   static async getArtist(id: string) {
     try {
-      const response = await instance.get(`artists/${id}`);
+      const response = await instance.get(`/artists/${id}`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -41,17 +41,6 @@ export class Artists {
     try {
       const response = await instance.get(
         `/artists/${artistId}/albums?include_groups=single`
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  static async getAlbumTracks(id: string) {
-    try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/albums/${id}/tracks`
       );
       return response.data;
     } catch (error: any) {

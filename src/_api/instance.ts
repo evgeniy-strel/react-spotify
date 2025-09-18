@@ -42,5 +42,6 @@ instance.interceptors.response.use(
         console.log("Unauthorized");
       }
     }
+    return Promise.reject(error);
   }
 );

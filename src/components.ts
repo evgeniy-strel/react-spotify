@@ -1,4 +1,3 @@
-export { default as AuthButton } from "./_components/AuthButton";
 export { default as RecentlyPlayed } from "./_components/RecentlyPlayed/RecentlyPlayed";
 export { Favorite } from "./_components/Favorite/Favorite";
 export { FollowedArtists } from "./_components/FollowedArtists/FollowedArtists";

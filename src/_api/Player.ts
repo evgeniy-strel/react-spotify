@@ -5,20 +5,7 @@ import { instance } from "./instance";
 export class Player {
   static async getState() {
     try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/me/player`
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  static async getCurrentlyPlaying() {
-    try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/me/player/currently-playing`
-      );
+      const response = await instance.get(`/me/player`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -27,9 +14,7 @@ export class Player {
 
   static async pausePlayback() {
     try {
-      const response = await instance.put(
-        `https://api.spotify.com/v1/me/player/pause`
-      );
+      const response = await instance.put(`/me/player/pause`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -38,9 +23,7 @@ export class Player {
 
   static async skipToNext() {
     try {
-      const response = await instance.post(
-        `https://api.spotify.com/v1/me/player/next`
-      );
+      const response = await instance.post(`/me/player/next`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -49,9 +32,7 @@ export class Player {
 
   static async skipToPrevious() {
     try {
-      const response = await instance.post(
-        `https://api.spotify.com/v1/me/player/next`
-      );
+      const response = await instance.post(`/me/player/next`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -60,54 +41,88 @@ export class Player {
 
   static async resumePlayback(params = {}) {
     try {
-      const response = await instance.put(
-        `https://api.spotify.com/v1/me/player/play`,
-        params
-      );
+      const response = await instance.put(`/me/player/play`, params);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
     }
   }
 
-  static async playTrack({ ids, uri }: { ids?: string[]; uri?: string }) {
+  static async playTrack({
+    ids,
+    uri,
+    deviceId,
+  }: {
+    ids?: string[];
+    uri?: string;
+    deviceId?: string;
+  }) {
     const PATTERN = "spotify:track:";
     const uris = (uri && [uri]) || ids?.map((id) => `${PATTERN}${id}`);
 
     try {
-      const response = await instance.put("/me/player/play", { uris });
+      const url =
+        "/me/player/play" + (deviceId ? `?device_id=${deviceId}` : "");
+      const response = await instance.put(url, { uris });
       return response.data;
     } catch (error: any) {
-      console.log(error.message);
+      /** Если недавно на устройстве не был активен плеер, то нужно явно указать устройство */
+      if (error.status === 404 && !deviceId) {
+        const deviceId = await this.getDeviceId();
+        if (deviceId) {
+          this.playTrack({ ids, uri, deviceId });
+        }
+      }
     }
   }
 
-  static async playContextUri(uri: string) {
+  static async playContextUri(uri: string, deviceId?: string) {
     try {
-      const response = await instance.put("/me/player/play", {
+      const url =
+        "/me/player/play" + (deviceId ? `?device_id=${deviceId}` : "");
+      const response = await instance.put(url, {
         context_uri: uri,
       });
       return response.data;
     } catch (error: any) {
+      /** Если недавно на устройстве не был активен плеер, то нужно явно указать устройство */
+      if (error.status === 404 && !deviceId) {
+        const deviceId = await this.getDeviceId();
+        if (deviceId) {
+          this.playContextUri(uri, deviceId);
+        }
+      }
       console.log(error.message);
     }
   }
 
   static async seekToPosition(ms: number) {
     try {
-      const response = await instance.put(
-        `https://api.spotify.com/v1/me/player/seek?position_ms=${ms}`
-      );
+      const response = await instance.put(`/me/player/seek?position_ms=${ms}`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
     }
   }
 
+  static async getDeviceId(): Promise<string | null> {
+    try {
+      const response = await instance.get(`/me/player/devices`);
+      const currentDevice: Record<any, string> | undefined =
+        response.data.devices?.at(0);
+      if (currentDevice) {
+        return currentDevice.id;
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
+    return null;
+  }
+
   static async setVolume(value: number) {
     try {
       const response = await instance.put(
-        `https://api.spotify.com/v1/me/player/volume?volume_percent=${value}`
+        `/me/player/volume?volume_percent=${value}`
       );
       return response.data;
     } catch (error: any) {
@@ -117,9 +132,7 @@ export class Player {
 
   static async setRepeatMode(state: ERepeatMode) {
     try {
-      const response = await instance.put(
-        `https://api.spotify.com/v1/me/player/repeat?state=${state}`
-      );
+      const response = await instance.put(`/me/player/repeat?state=${state}`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -128,9 +141,7 @@ export class Player {
 
   static async togglePlaybackShuffle(value: boolean) {
     try {
-      const response = await instance.put(
-        `https://api.spotify.com/v1/me/player/shuffle?state=${value}`
-      );
+      const response = await instance.put(`/me/player/shuffle?state=${value}`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -147,28 +158,6 @@ export class Player {
         item.track.is_favorite = saved[index];
       });
       return data;
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  static async getAlbums(id: string) {
-    try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/artists/${id}/albums`
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  static async getAlbumTracks(id: string) {
-    try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/albums/${id}/tracks`
-      );
-      return response.data;
     } catch (error: any) {
       console.log(error.message);
     }

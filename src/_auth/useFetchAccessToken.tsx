@@ -1,8 +1,9 @@
+import { fetchAccessToken } from "../auth";
+
 import { useEffect } from "react";
-import { openLoginPage, fetchAccessToken } from "../auth";
 import { useSearchParams } from "react-router";
 
-const AuthButton = () => {
+const useFetchAccessToken = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const code = searchParams.get("code");
 
@@ -15,4 +16,4 @@ const AuthButton = () => {
   return <></>;
 };
 
-export default AuthButton;
+export default useFetchAccessToken;

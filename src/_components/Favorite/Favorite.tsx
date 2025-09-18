@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import { Segmented, Tabs, Typography } from "antd";
-import type { TabsProps } from "antd";
 import { FavoriteTracks } from "./FavoriteTracks/FavoriteTracks";
 import { FavoriteAlbums } from "./FavoriteAlbums/FavoriteAlbums";
 import { FavoriteBooks } from "./FavoriteBooks/FavoriteBooks";
+
+import { Segmented, Typography } from "antd";
 
 enum ETabs {
   tracks = "Треки",
@@ -18,6 +18,9 @@ const TABS_CONTENT = {
   [ETabs.audiobooks]: FavoriteBooks,
 };
 
+/**
+ * Блок с тремя вкладками избранного: треки, альбомы, книги
+ */
 export const Favorite = () => {
   const [selectedTab, setSelectedTab] = useState<ETabs>(ETabs.tracks);
   const Content = useMemo(() => TABS_CONTENT[selectedTab], [selectedTab]);

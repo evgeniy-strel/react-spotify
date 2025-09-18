@@ -3,9 +3,7 @@ import { instance } from "./instance";
 export class Users {
   static async getFollowedArtists(): Promise<any> {
     try {
-      const response = await instance.get(
-        `https://api.spotify.com/v1/me/following?type=artist`
-      );
+      const response = await instance.get(`/me/following?type=artist`);
       return response.data;
     } catch (error: any) {
       console.log(error.message);
@@ -27,7 +25,7 @@ export class Users {
   static async unFollowArtist(artistIds: string[]) {
     try {
       const response = await instance.delete(
-        `me/following?type=artist&ids=${artistIds.join(",")}`
+        `/me/following?type=artist&ids=${artistIds.join(",")}`
       );
       return response.data;
     } catch (error: any) {
@@ -38,7 +36,7 @@ export class Users {
   static async followArtist(artistIds: string[]) {
     try {
       const response = await instance.put(
-        `me/following?type=artist&ids=${artistIds.join(",")}`
+        `/me/following?type=artist&ids=${artistIds.join(",")}`
       );
       return response.data;
     } catch (error: any) {

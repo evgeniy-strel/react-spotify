@@ -33,7 +33,7 @@ const ListenButton = ({ artistId, isLoading }: IListenButtonProps) => {
 
   const getAllPlayingUri = () => {
     const artitstUri =
-      playerData?.item.artists?.map((artist: any) => artist.uri) || [];
+      playerData?.item?.artists?.map((artist: any) => artist.uri) || [];
     const currentArtistUri = playerData?.context?.uri;
 
     return [...artitstUri, currentArtistUri];
