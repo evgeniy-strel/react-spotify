@@ -80,7 +80,7 @@
 </details>
 
 ## 🎬 Видеодемонстрация
-[![Демо видео](https://github.com/evgeniy-strel/react-spotify/blob/master/screens/demo-gif.gif?raw=true)](https://github.com/evgeniy-strel/react-spotify/blob/master/screens/demo.mp4?raw=true)
+[![Демо видео](https://github.com/evgeniy-strel/react-spotify/blob/master/screens/demo-gif.gif?raw=true)](https://github.com/evgeniy-strel/react-spotify/raw/refs/heads/master/screens/demo.mp4)
 > 🎵 Для проигрывания со звуком скачайте видео, кликнув по нему
 
 
