@@ -94,12 +94,11 @@
 git clone https://github.com/evgeniy-strel/react-spotify.git
 ```
 
-2) Создайте в корне проекта файл .env и укажите ключи Spotify API в нем: для этого по [инструкции](https://developer.spotify.com/documentation/web-api) нужно создать приложение
+2) Создайте в корне проекта файл .env и укажите ключ CLIENT_ID в нем: для этого по [инструкции](https://developer.spotify.com/documentation/web-api) нужно создать приложение через Spotify API, и также выставить редирект на localhost.
 ![Spotify App](https://github.com/evgeniy-strel/react-spotify/blob/master/screens/spotify-app-settings.jpg?raw=true)
 В итоге файл .env должен выглядеть так:
 ```bash
 REACT_APP_CLIENT_ID = YOUR_CLIENT_ID
-REACT_APP_CLIENT_SECRET = YOUR_CLIENT_SECRET
 ```
 
 3) Установите зависимости
